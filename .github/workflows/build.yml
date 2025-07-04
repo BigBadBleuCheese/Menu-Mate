@@ -1,0 +1,54 @@
+name: Build
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Use checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.7.17'
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Node dependencies
+        run: |
+          cd ui
+          npm ci
+
+      - name: Compile mod source to byte code
+        run: python -m compileall -b -q -j0 .
+
+      - name: Build the Vue website for production
+        run: |
+          cd ui
+          npm run build
+
+      - name: ui/dist -> dist
+        run: mv ui/dist/ dist/
+
+      - name: Delete Vue source
+        run: rm -rf ui
+
+      - name: dist -> ui
+        run: mv dist/ ui/
+
+      - name: Pack script mod
+        run: zip -r -9 -Z deflate "MenuMate.ts4script" . -i '*.pyc' '*.yml' '*.html' '*.md' '*.css' '*.scss' '*.js' '*.json' '*.mjs' '*.ts' '*.vue' '*.jpg' '*.jpeg' '*.gif' '*.png' '*.ico' '*.ttf' '*.otf' '*.eot' '*.woff' '*.woff2' '*.browserslistrc' '*.editorconfig' -x '*README.md*'
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MenuMate
+          path: "MenuMate.ts4script"
