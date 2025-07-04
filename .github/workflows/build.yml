@@ -50,5 +50,5 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: MenuMate
-          path: "MenuMate.ts4script"
+          name: Menu_Mate
+          path: "Menu_Mate.ts4script"
