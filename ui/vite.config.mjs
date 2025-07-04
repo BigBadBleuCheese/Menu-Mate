@@ -29,12 +29,15 @@ export default defineConfig({
         }),
         Components(),
         Fonts({
-            google: {
-                families: [{
-                    name: 'Roboto',
-                    styles: 'wght@100;300;400;500;700;900',
-                }],
-            },
+            fontsource: {
+                families: [
+                    {
+                        name: 'Roboto',
+                        weights: [100, 300, 400, 500, 700, 900],
+                        styles: ['normal', 'italic'],
+                    }
+                ]
+            }
         }),
         AutoImport({
             imports: [
